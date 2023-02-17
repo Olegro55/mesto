@@ -26,3 +26,10 @@
     padding-bottom: 36px;
   }
 }
+
+@media screen and (max-width: 622px) {
+  .footer {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
