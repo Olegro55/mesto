@@ -11,7 +11,7 @@
 * Использование функций calc()
 * Оптимизация шрифтов
 * Медиазапросы @media
-* DOM, JavaScript, ООП, ES6 Modules, Webpack
+* DOM, JavaScript, ООП, ES6 Modules, Webpack, API
 
 ### Цель проекта
 
