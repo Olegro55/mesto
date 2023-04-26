@@ -2,11 +2,11 @@
   "name": "mesto-8",
   "version": "1.0.0",
   "description": "Проект посвящен путешественникам и местам, в которых стоит побывать. Это интерактивный сайт.\r Можно добавить свои данные - ФИО и информацию о себе.\r Можно лайкать понравившиеся места путешествий. Можно добавлять новые.",
+  "homepage": "https://olegro55.github.io/mesto/",
   "main": "src/pages/index.js",
   "scripts": {
     "dev": "webpack serve",
     "build": "webpack --mode production",
-    "homepage": "https://olegro55.github.io/mesto/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
