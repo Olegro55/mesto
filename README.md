@@ -26,4 +26,4 @@
 * [Генератор HTML-дерева](https://yoksel.github.io/html-tree/)
 * ...и другие приложения
 
-Проект доступен по ссылке: [Место](https://Olegro55.github.io/mesto/index.html)
+Проект доступен по ссылке: [Место](https://Olegro55.github.io/mesto/)
