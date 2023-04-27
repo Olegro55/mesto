@@ -5,6 +5,7 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { Section } from '../components/Section.js';
 import { cards, validationConfig } from '../utils/constants.js';
+import './index.css';
 
 const formEditProfile = document.querySelector('.popup__form');
 const formAddElement = document.querySelector('#form');
