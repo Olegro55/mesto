@@ -64,9 +64,15 @@ const popupEditProfileImage = new PopupWithForm('.popup_edit-profile-image', dat
     .finally(_ => { popupEditProfileImage.removeWaitMessage(); });
 });
 const popupAddElement = new PopupWithForm('.popup_add-element', data => {
-  const newCardElement = generateCard(data);
-  cardsList.addItem(newCardElement);
-  popupAddElement.close();
+  popupAddElement.addWaitMessage();
+  api.addCard(data)
+    .then(res => {
+        const newCardElement = generateCard(res, userId);
+        cardsList.addItem(newCardElement);
+        popupAddElement.close();
+      })
+    .catch(err => { console.log(err); })
+    .finally(_ => { popupAddElement.removeWaitMessage(); });
 });
 const popupImage = new PopupWithImage('.popup-image');
 
@@ -95,27 +101,31 @@ elementAddButton.addEventListener('click', () => {
   popupAddElement.open();
 });
 
-api.getUserInfo()
-  .then(res => {
-    userInfo.setUserInfo(res);
-    userInfo.setUserImage(res);
+let cardsList;
+let userId;
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+  .then(([userData, cards]) => {
+    userInfo.setUserInfo(userData);
+    userInfo.setUserImage(userData);
+    userId = userData._id
+
+    cardsList = new Section(
+      {
+        items: cards,
+        renderer: item => {
+          const newCardElement = generateCard(item, userId);
+          cardsList.addItem(newCardElement);
+        }
+      },
+      '.elements'
+    );
+    cardsList.addInitialItems();
   })
   .catch(err => { console.log(err); });
 
-const cardsList = new Section(
-  {
-    items: cards,
-    renderer: item => {
-      const newCardElement = generateCard(item);
-      cardsList.addItem(newCardElement);
-    }
-  },
-  '.elements'
-);
-cardsList.addInitialItems();
-
-function generateCard(card) {
-  const newCard = new Card(card, '#cardTemplate', popupImage.open.bind(popupImage));
+function generateCard(card, userId) {
+  const newCard = new Card(card, userId, '#cardTemplate', popupImage.open.bind(popupImage));
   const newCardElement = newCard.generate();
   return newCardElement;
 }
+
