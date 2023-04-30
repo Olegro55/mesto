@@ -11,7 +11,7 @@ import './index.css';
 
 const formEditProfile = document.forms['edit-profile-form'];
 const formEditProfileImage = document.forms['edit-profile-image-form'];
-const formAddElement = document.forms['confirm-deletion-form'];
+const formAddElement = document.forms['add-element-form'];
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileEditImageButton = document.querySelector('.profile__edit-image');
 const elementAddButton = document.querySelector('.profile__add-button');
