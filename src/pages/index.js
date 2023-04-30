@@ -134,7 +134,14 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
 function generateCard(card, userId) {
   const newCard = new Card(card, userId, '#cardTemplate', { 
     handleClick: popupImage.open.bind(popupImage),
-    handleDelete: popupConfirmDeletion.open.bind(popupConfirmDeletion)
+    handleDelete: popupConfirmDeletion.open.bind(popupConfirmDeletion),
+    handleLike: (cardId, likeAction) => {
+      api.likeCard(cardId, likeAction)
+        .then(res => {
+          newCard.updateLikes(res);
+        })
+        .catch(err => { console.log(err); });
+    }
   });
   const newCardElement = newCard.generate();
   return newCardElement;

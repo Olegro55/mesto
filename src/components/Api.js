@@ -62,4 +62,13 @@ export class Api {
     })
       .catch(err => { console.log(err); });
   }
+
+  likeCard(cardId, cardAction) {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: cardAction,
+      headers: this._headers
+    })
+      .then(res => { return this._checkResponse(res); })
+      .catch(err => { console.log(err); });
+  }
 }

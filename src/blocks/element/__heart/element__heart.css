@@ -3,6 +3,7 @@
   height: 19px;
   border: none;
   padding: 0;
+  margin-bottom: 5px;
   background: none;
   background-image: url(../../../images/heart-1.svg);
   cursor: pointer;
