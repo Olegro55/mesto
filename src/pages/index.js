@@ -6,73 +6,25 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { PopupWithButton } from '../components/PopupWithButton.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { Section } from '../components/Section.js';
+import { validationConfig, apiConfig, userInfoConfig } from '../utils/constants.js';
 import './index.css';
 
-const validationConfig = {
-  inputSelector: '.popup__item',
-  submitButtonSelector: '.popup__button',
-  errorClass: 'popup__input-error_active',
-  inputErrorClass: 'popup__item_error',
-  inactiveButtonClass: 'popup__button_inactive'
-};
-const formEditProfile = document.querySelector('.popup_edit-profile').querySelector('.popup__form');
-const formEditProfileImage = document.querySelector('.popup_edit-profile-image').querySelector('.popup__form');
-const formAddElement = document.querySelector('.popup_add-element').querySelector('.popup__form');
-const nameInput = document.querySelector('.popup__item_type_name');
-const aboutInput = document.querySelector('.popup__item_type_about');
-const imageInput = document.querySelector('.popup__item_type_image');
+const formEditProfile = document.forms['edit-profile-form'];
+const formEditProfileImage = document.forms['edit-profile-image-form'];
+const formAddElement = document.forms['confirm-deletion-form'];
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileEditImageButton = document.querySelector('.profile__edit-image');
 const elementAddButton = document.querySelector('.profile__add-button');
 
-const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-65',
-  headers: {
-    authorization: '12543613-4b99-4f5b-854b-aa27b4c9eaee',
-    'Content-Type': 'application/json'
-  }
-});
-
-const userInfo = new UserInfo({
-  nameSelector: '.profile__title',
-  aboutSelector: '.profile__subtitle',
-  imageSelector: '.profile__image'
-});
+const api = new Api(apiConfig);
+const userInfo = new UserInfo(userInfoConfig);
 const formProfileValidator = new FormValidator(validationConfig, formEditProfile);
 const formProfileImageValidator = new FormValidator(validationConfig, formEditProfileImage);
 const formElementValidator = new FormValidator(validationConfig, formAddElement);
 
-const popupEditProfile = new PopupWithForm('.popup_edit-profile', data => {
-  popupEditProfile.addWaitMessage();
-  api.setUserInfo(data)
-    .then(res => {
-        userInfo.setUserInfo(res);
-        popupEditProfile.close();
-      })
-    .catch(err => { console.log(err); })
-    .finally(_ => { popupEditProfile.removeWaitMessage(); });
-});
-const popupEditProfileImage = new PopupWithForm('.popup_edit-profile-image', data => {
-  popupEditProfileImage.addWaitMessage();
-  api.setUserImage(data)
-    .then(res => {
-        userInfo.setUserImage(res);
-        popupEditProfileImage.close();
-      })
-    .catch(err => { console.log(err); })
-    .finally(_ => { popupEditProfileImage.removeWaitMessage(); });
-});
-const popupAddElement = new PopupWithForm('.popup_add-element', data => {
-  popupAddElement.addWaitMessage();
-  api.addCard(data)
-    .then(res => {
-        const newCardElement = generateCard(res, userId);
-        cardsList.addItem(newCardElement);
-        popupAddElement.close();
-      })
-    .catch(err => { console.log(err); })
-    .finally(_ => { popupAddElement.removeWaitMessage(); });
-});
+const popupEditProfile = new PopupWithForm('.popup_edit-profile', data => { handleEditProfileSubmit(data) });
+const popupEditProfileImage = new PopupWithForm('.popup_edit-profile-image', data => { handleEditProfileImageSubmit(data) });
+const popupAddElement = new PopupWithForm('.popup_add-element', data => { handleAddElementSubmit(data) });
 const popupConfirmDeletion = new PopupWithButton('.popup_confirm-deletion', (cardId, card) => {
   api.deleteCard(cardId)
     .then(_ => {
@@ -93,15 +45,12 @@ formProfileImageValidator.enableValidation();
 formElementValidator.enableValidation();
 
 profileEditButton.addEventListener('click', () => {
-  const data = userInfo.getUserInfo();
-  nameInput.value = data.name;
-  aboutInput.value = data.about;
+  popupEditProfile.setInputValues(userInfo.getUserInfo());
   formProfileValidator.removeErrors();
   popupEditProfile.open();
 });
 profileEditImageButton.addEventListener('click', () => {
-  const data = userInfo.getUserInfo();
-  imageInput.value = data.avatar;
+  popupEditProfileImage.setInputValues(userInfo.getUserInfo());
   formProfileImageValidator.removeErrors();
   popupEditProfileImage.open();
 });
@@ -115,7 +64,6 @@ let userId;
 Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
     userInfo.setUserInfo(userData);
-    userInfo.setUserImage(userData);
     userId = userData._id
 
     cardsList = new Section(
@@ -132,6 +80,41 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
   })
   .catch(err => { console.log(err); });
 
+function handleSubmit(request, popupInstance, loadingText = "Сохранение...") {
+  popupInstance.renderLoading(true, loadingText);
+  request()
+    .then(() => {
+      popupInstance.close()
+    })
+    .catch((err) => {
+      console.error(`Ошибка: ${err}`);
+    })
+    .finally(() => {
+      popupInstance.renderLoading(false);
+    });
+}
+
+function handleEditProfileSubmit(inputValues) {
+  function makeRequest() {
+    return api.setUserInfo(inputValues).then(res => { userInfo.setUserInfo(res); });
+  }
+  handleSubmit(makeRequest, popupEditProfile);
+}
+
+function handleEditProfileImageSubmit(inputValues) {
+  function makeRequest() {
+    return api.setUserImage(inputValues).then(res => { userInfo.setUserInfo(res); });
+  }
+  handleSubmit(makeRequest, popupEditProfileImage);
+}
+
+function handleAddElementSubmit(inputValues) {
+  function makeRequest() {
+    return api.addCard(inputValues).then(res => { cardsList.addItem(generateCard(res, userId)); });
+  }
+  handleSubmit(makeRequest, popupAddElement);
+}
+
 function generateCard(card, userId) {
   const newCard = new Card(card, userId, '#cardTemplate', { 
     handleClick: popupImage.open.bind(popupImage),
@@ -147,4 +130,3 @@ function generateCard(card, userId) {
   const newCardElement = newCard.generate();
   return newCardElement;
 }
-

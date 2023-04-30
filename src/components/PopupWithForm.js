@@ -6,6 +6,7 @@ export class PopupWithForm extends Popup {
     this._form = this._popupElement.querySelector('.popup__form');
     this._inputList = this._popupElement.querySelectorAll('.popup__item');
     this._button = this._popupElement.querySelector('.popup__button');
+    this._buttonText = this._button.textContent;
     this._handleFormSubmit = handleFormSubmit;
   }
   
@@ -22,15 +23,20 @@ export class PopupWithForm extends Popup {
       this._handleFormSubmit(this._getInputValues());
     });
   }
-  
-  addWaitMessage() {
-    this._button.textContent = 'Сохранение...';
+
+  renderLoading(isLoading, loadingText='Сохранение...') {
+    if (isLoading) 
+      this._button.textContent = loadingText;
+    else
+      this._button.textContent = this._buttonText;
   }
   
-  removeWaitMessage() {
-    this._button.textContent = 'Сохранить';
-  }
-  
+  setInputValues(data) {
+    this._inputList.forEach((input) => {
+      input.value = data[input.name];
+    });
+  } 
+
   _getInputValues() {
     const formValues = {};
     this._inputList.forEach(input => {

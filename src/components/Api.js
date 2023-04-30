@@ -9,66 +9,56 @@ export class Api {
       return Promise.reject(`Ошибка: ${res.status}`);
     return res.json();
   }
+
+  _request(endpoint, options) {
+    return fetch(`${this._url}/${endpoint}`, options).then(this._checkResponse);
+  }
   
   getUserInfo() {
-    return fetch(`${this._url}/users/me`, {
-      headers: this._headers
-    })
-      .then(res => { return this._checkResponse(res); })
-      .catch(err => { console.log(err); });
+    return this._request('users/me', { headers: this._headers });
   }
   
   setUserInfo(data) {
-    return fetch(`${this._url}/users/me`, {
+    return this._request('users/me', {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(data)
-    })
-      .then(res => { return this._checkResponse(res); })
-      .catch(err => { console.log(err); });
+    });
   }
   
   setUserImage(data) {
-    return fetch(`${this._url}/users/me/avatar`, {
+    return this._request('users/me/avatar', {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(data)
-    })
-      .then(res => { return this._checkResponse(res); })
-      .catch(err => { console.log(err); });
+    });
   }
 
   getInitialCards() {
-    return fetch(`${this._url}/cards`, {
+    return this._request('cards', {
       headers: this._headers
-    })
-      .then(res => { return this._checkResponse(res); })
+    });
   }
 
   addCard(data) {
-    return fetch(`${this._url}/cards`, {
+    return this._request('cards', {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
-    })
-      .then(res => { return this._checkResponse(res); })
-      .catch(err => { console.log(err); });
+    });
   }
 
   deleteCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
+    return this._request(`cards/${cardId}`, {
       method: 'DELETE',
       headers: this._headers
-    })
-      .catch(err => { console.log(err); });
+    });
   }
 
   likeCard(cardId, cardAction) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
+    return this._request(`cards/${cardId}/likes`, {
       method: cardAction,
       headers: this._headers
-    })
-      .then(res => { return this._checkResponse(res); })
-      .catch(err => { console.log(err); });
+    });
   }
 }
