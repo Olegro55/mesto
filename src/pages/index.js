@@ -1,12 +1,11 @@
 import { Api } from '../components/Api.js';
 import { Card } from '../components/Card.js';
 import { FormValidator } from '../components/FormValidator.js';
-import { Popup } from '../components/Popup.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
+import { PopupWithButton } from '../components/PopupWithButton.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { Section } from '../components/Section.js';
-import { cards } from '../utils/constants.js';
 import './index.css';
 
 const validationConfig = {
@@ -74,11 +73,20 @@ const popupAddElement = new PopupWithForm('.popup_add-element', data => {
     .catch(err => { console.log(err); })
     .finally(_ => { popupAddElement.removeWaitMessage(); });
 });
+const popupConfirmDeletion = new PopupWithButton('.popup_confirm-deletion', (cardId, card) => {
+  api.deleteCard(cardId)
+    .then(_ => {
+      card.delete();
+      popupConfirmDeletion.close()
+    })
+    .catch(err => { console.log(err); });
+});
 const popupImage = new PopupWithImage('.popup-image');
 
 popupEditProfile.setEventListeners();
 popupEditProfileImage.setEventListeners();
 popupAddElement.setEventListeners();
+popupConfirmDeletion.setEventListeners();
 popupImage.setEventListeners();
 formProfileValidator.enableValidation();
 formElementValidator.enableValidation();
@@ -111,7 +119,7 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
 
     cardsList = new Section(
       {
-        items: cards,
+        items: cards.reverse(),
         renderer: item => {
           const newCardElement = generateCard(item, userId);
           cardsList.addItem(newCardElement);
@@ -124,7 +132,10 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
   .catch(err => { console.log(err); });
 
 function generateCard(card, userId) {
-  const newCard = new Card(card, userId, '#cardTemplate', popupImage.open.bind(popupImage));
+  const newCard = new Card(card, userId, '#cardTemplate', { 
+    handleClick: popupImage.open.bind(popupImage),
+    handleDelete: popupConfirmDeletion.open.bind(popupConfirmDeletion)
+  });
   const newCardElement = newCard.generate();
   return newCardElement;
 }

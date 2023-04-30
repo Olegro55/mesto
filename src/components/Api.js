@@ -54,4 +54,12 @@ export class Api {
       .then(res => { return this._checkResponse(res); })
       .catch(err => { console.log(err); });
   }
+
+  deleteCard(cardId) {
+    return fetch(`${this._url}/cards/${cardId}`, {
+      method: 'DELETE',
+      headers: this._headers
+    })
+      .catch(err => { console.log(err); });
+  }
 }

@@ -1,11 +1,13 @@
 export class Card {
-  constructor({ name, link, owner: {_id}}, userId, templateSelector, handleCardClick) {
+  constructor({ name, link, _id, owner: {_id:ownerId}}, userId, templateSelector, { handleClick, handleDelete }) {
     this._templateSelector = templateSelector;
+    this._cardId = _id,
     this._name = name;
     this._link = link;
-    this._ownerId = _id;
+    this._ownerId = ownerId;
     this._userId = userId;
-    this._handleCardClick = handleCardClick;
+    this._handleClick = handleClick;
+    this._handleDelete = handleDelete;
   }
 
   generate() {
@@ -34,17 +36,15 @@ export class Card {
       this._like();
     });
     if (this._ownerId === this._userId)
-      this._deleteButton.addEventListener('click', () => {
-        this._delete();
-      });
-    this._image.addEventListener('click', () => this._handleCardClick(this._name, this._link));
+      this._deleteButton.addEventListener('click', () => this._handleDelete(this._cardId, this));
+    this._image.addEventListener('click', () => this._handleClick(this._name, this._link));
   }
 
   _like() {
     this._heart.classList.toggle('element__heart_active');
   }
 
-  _delete() {
+  delete() {
     this._element.remove();
     this._element = null;
   }
