@@ -15,9 +15,9 @@ const validationConfig = {
   inputErrorClass: 'popup__item_error',
   inactiveButtonClass: 'popup__button_inactive'
 };
-const formEditProfile = document.querySelector('.popup__form');
-const formEditProfileImage = document.querySelector('.popup_edit-profile-image');
-const formAddElement = document.querySelector('.popup__form');
+const formEditProfile = document.querySelector('.popup_edit-profile').querySelector('.popup__form');
+const formEditProfileImage = document.querySelector('.popup_edit-profile-image').querySelector('.popup__form');
+const formAddElement = document.querySelector('.popup_add-element').querySelector('.popup__form');
 const nameInput = document.querySelector('.popup__item_type_name');
 const aboutInput = document.querySelector('.popup__item_type_about');
 const imageInput = document.querySelector('.popup__item_type_image');
@@ -89,23 +89,24 @@ popupAddElement.setEventListeners();
 popupConfirmDeletion.setEventListeners();
 popupImage.setEventListeners();
 formProfileValidator.enableValidation();
+formProfileImageValidator.enableValidation();
 formElementValidator.enableValidation();
 
 profileEditButton.addEventListener('click', () => {
   const data = userInfo.getUserInfo();
   nameInput.value = data.name;
   aboutInput.value = data.about;
-  formProfileValidator.toggleButtonState();
+  formProfileValidator.removeErrors();
   popupEditProfile.open();
 });
 profileEditImageButton.addEventListener('click', () => {
   const data = userInfo.getUserInfo();
   imageInput.value = data.avatar;
-  formProfileImageValidator.toggleButtonState();
+  formProfileImageValidator.removeErrors();
   popupEditProfileImage.open();
 });
 elementAddButton.addEventListener('click', () => {
-  formElementValidator.toggleButtonState();
+  formElementValidator.removeErrors();
   popupAddElement.open();
 });
 
