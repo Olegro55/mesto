@@ -18,7 +18,9 @@
 .element__foto{display:block;height:282px;-o-object-fit:cover;object-fit:cover;width:100%}
 .element__bottom{align-items:center;display:flex;justify-content:space-between;margin:25px auto;width:242px}
 .element__text{flex-shrink:0;font-size:24px;font-style:normal;font-weight:900;line-height:29px;margin:0;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.element__heart{background:none;background-image:url(images/heart-1.87ed371465c7a6a1cd01.svg);border:none;cursor:pointer;height:19px;padding:0;width:22px}.element__heart:hover{opacity:.5}
+.element__like{align-items:center;display:flex;flex-direction:column}
+.element__heart{background:none;background-image:url(images/heart-1.87ed371465c7a6a1cd01.svg);border:none;cursor:pointer;height:19px;margin-bottom:5px;padding:0;width:22px}.element__heart:hover{opacity:.5}
+.element__like-counter{color:#000;font-size:13px;font-weight:400;line-height:16px;margin:0;padding:0}
 .element__heart_active{background-image:url(images/heart-2.fe17a515669479b1e649.svg)}
 .element__delete{background:none;background-image:url(images/Delete.823b0cf1b0b7e9cb7cad.svg);background-size:contain;border:none;cursor:pointer;height:19px;padding:0;position:absolute;right:20px;top:20px;width:18px}.element__delete:hover{opacity:.5}
 .footer{color:#545454;font-size:18px;font-style:normal;font-weight:400;line-height:22px;margin:0 auto;max-width:880px;padding-bottom:60px;padding-top:67px}@media screen and (max-width:1024px){.footer{max-width:580px;padding-bottom:36px;padding-top:48px}}@media screen and (max-width:622px){.footer{margin:0 auto;padding-bottom:36px;padding-top:48px;width:282px}}@media screen and (max-width:322px){.footer{font-size:14px;line-height:17px}}
