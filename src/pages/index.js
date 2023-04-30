@@ -17,7 +17,7 @@ const validationConfig = {
 };
 const formEditProfile = document.querySelector('.popup__form');
 const formEditProfileImage = document.querySelector('.popup_edit-profile-image');
-const formAddElement = document.querySelector('#form');
+const formAddElement = document.querySelector('.popup__form');
 const nameInput = document.querySelector('.popup__item_type_name');
 const aboutInput = document.querySelector('.popup__item_type_about');
 const imageInput = document.querySelector('.popup__item_type_image');
